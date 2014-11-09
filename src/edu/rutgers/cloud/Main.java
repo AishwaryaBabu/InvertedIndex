@@ -17,16 +17,20 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
-public class Main {
+
+public class Main{
 	
 	public static class SearchReducer extends Reducer<Text, IntWritable, Text, IntWritable>{
-		public void reduce(Text key, Iterator<IntWritable> values, Context context) 
+		
+		@Override
+		public void reduce(Text key, Iterable<IntWritable> values, Context ctx) 
 			      throws IOException, InterruptedException {
 			        int sum = 0;
-			        while (values.hasNext()) {
-			            sum += values.next().get();
+			        for(IntWritable value:values)
+			        {
+			            sum+=value.get();
 			        }
-			        context.write(key, new IntWritable(sum));
+			        ctx.write(key, new IntWritable(sum));
 			    }
 	}
 
@@ -34,13 +38,14 @@ public class Main {
 		
 		private final static IntWritable one = new IntWritable(1);
 	    private Text word = new Text();
-	        
-	    public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+	     
+	    @Override
+	    public void map(LongWritable key, Text value, Context ctx) throws IOException, InterruptedException {
 	        String line = value.toString();
 	        StringTokenizer tokenizer = new StringTokenizer(line);
 	        while (tokenizer.hasMoreTokens()) {
 	            word.set(tokenizer.nextToken());
-	            context.write(word, one);
+	            ctx.write(word, one);
 	        }
 	    }
 	}
@@ -53,6 +58,9 @@ public class Main {
 	        
 	    job.setOutputKeyClass(Text.class);
 	    job.setOutputValueClass(IntWritable.class);
+	    
+	    job.setMapOutputKeyClass(Text.class);
+	    job.setMapOutputValueClass(IntWritable.class);
 	        
 	    job.setMapperClass(Main.SearchMapper.class);
 	    job.setReducerClass(Main.SearchReducer.class);
