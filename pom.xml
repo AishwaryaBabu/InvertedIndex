@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>RUSearch</groupId>
   <artifactId>RUSearch</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.1</version>
   <packaging>jar</packaging>
   <build>
     <sourceDirectory>src</sourceDirectory>
@@ -28,7 +28,7 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                    
+                    <finalName>InvertedIndex</finalName>
                 </configuration>
                 <executions>
                     <execution>
@@ -198,6 +198,12 @@
 	<version>1.0.1</version>
 </dependency>
   
+<dependency>
+	<groupId>org.apache.lucene</groupId>
+	<artifactId>lucene-analyzers</artifactId>
+	<version>3.6.2</version>
+</dependency>
+
 
 </dependencies>
 </project>
